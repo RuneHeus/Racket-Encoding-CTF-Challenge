@@ -21,9 +21,9 @@
 (define (shift-for-index i)
   (+ 3 (modulo i 5)))
 
-;;Reorder blocks so that:
-;;all even-indexed blocks come first
-;;all odd-indexed blocks come after
+;; Reorder blocks so that:
+;; - all even-indexed blocks come first
+;; - all odd-indexed blocks come after
 (define (reorder-blocks blocks)
   (append
    (for/list ([i (in-range (length blocks))] #:when (even? i))
@@ -31,8 +31,8 @@
    (for/list ([i (in-range (length blocks))] #:when (odd? i))
      (list-ref blocks i))))
 
-;;Split a list into sublists of at most 4 elements
-;;Example: '(a b c d e f) -> '((a b c d) (e f))
+;; Split a list into sublists of at most 4 elements
+;; Example: '(a b c d e f) -> '((a b c d) (e f))
 (define (chunk4 lst)
   (if (null? lst)
       '()
