@@ -1,4 +1,0 @@
-#lang racket
-
-(define (encoding string)
-  string)
