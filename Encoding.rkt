@@ -1,59 +1,25 @@
 #lang racket
 
-;;Convert input values to characters
-;;integers become digit characters (7 -> #\7)
-;;symbols become their first character ('abc -> #\a)
-;;characters stay unchanged
 (define (to-char x)
   (cond
     [(integer? x) (integer->char (+ 48 x))]
     [(symbol? x)  (string-ref (symbol->string x) 0)]
     [else x]))
 
-;;Rotate a character by shifting its ASCII value
-;;Example: #\a with shift 3 becomes #\d
 (define (rotate-char ch n)
   (integer->char (+ (char->integer ch) n)))
 
-;;Determine the shift based on the character index
-;;Produces repeating shifts: 3 4 5 6 7 3 4 5 ...
-;;This makes it so all characters get a different shift based on index
 (define (shift-for-index i)
   (+ 3 (modulo i 5)))
 
-;;Reorder blocks so that:
-;;all even-indexed blocks come first
-;;all odd-indexed blocks come after
-(define (reorder-blocks blocks)
-  (append
-   (for/list ([i (in-range (length blocks))] #:when (even? i))
-     (list-ref blocks i))
-   (for/list ([i (in-range (length blocks))] #:when (odd? i))
-     (list-ref blocks i))))
-
-;;Split a list into sublists of at most 4 elements
-;;Example: '(a b c d e f) -> '((a b c d) (e f))
-(define (chunk4 lst)
-  (if (null? lst)
-      '()
-      (cons (take lst (min 4 (length lst)))
-            (chunk4 (drop lst (min 4 (length lst)))))))
-
-;; Main encoding function
-;; 1. Convert inputs to characters
-;; 2. Rotate each character using an index-based shift
-;; 3. Split into blocks of 4
-;; 4. Reorder the blocks
-;; 5. Flatten the result into a single list
 (define (encoding xs)
   (define chars (map to-char xs))
+  (for/list ([ch chars] [i (in-naturals)])
+    (rotate-char ch (shift-for-index i))))
 
-  (define rotated
-    (for/list ([ch chars] [i (in-naturals)])
-      (rotate-char ch (shift-for-index i))))
-
-  (apply append (reorder-blocks (chunk4 rotated))))
-
-;;This is the main procedure for the whole encoding algorithm
 (define (encoding->string xs)
   (list->string (encoding xs)))
+
+;; => Output = ":uk':h6{"
+;; Can you reconstruct a valid input that produces this output?
+;; The recovered input contains the secret you need.
