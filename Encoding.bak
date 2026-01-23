@@ -6,7 +6,7 @@
     [(symbol? x)  (string-ref (symbol->string x) 0)]
     [else x]))
 
-(define (rotate-char ch n) ;; <- End Point
+(define (rotate-char ch n)
   (integer->char (+ (char->integer ch) n)))
 
 (define (shift-for-index i)
@@ -17,7 +17,7 @@
   (for/list ([ch chars] [i (in-naturals)])
     (rotate-char ch (shift-for-index i))))
 
-(define (encoding->string xs) ;; <- Starting Point
+(define (encoding->string xs)
   (list->string (encoding xs)))
 
 ;; => Output = ":uk':h6{"
